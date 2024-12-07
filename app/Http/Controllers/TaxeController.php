@@ -13,19 +13,24 @@ class TaxeController extends Controller
         return view('taxes.index', compact('taxes'));
     }
 
+
     public function edit($id)
     {
         $taxes = Taxe::findOrFail($id);
         return view('taxes.edit', compact('taxes'));
     }
 
-    public function update(Request $request, Taxe $taxe)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'pourcentage' => 'required|numeric',
+            'taxe' => 'required|numeric|min:0',
         ]);
-        
-        $taxe->update($request->all());
-        return redirect()->route('taxes.index')->with('success', 'taxes mis à jour avec succès.');
+
+        $taxe = Taxe::findOrFail($id);
+        $taxe->update([
+            'pourcentage' => $request->taxe,
+        ]);
+
+        return redirect()->route('taxes.index')->with('success', 'La taxe a été mise à jour avec succès.');
     }
 }

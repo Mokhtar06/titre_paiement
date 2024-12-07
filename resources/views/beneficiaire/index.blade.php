@@ -74,8 +74,10 @@
                         <a href="{{ route('beneficiaire.edit', $beneficiaire) }}" class="btn btn-warning btn-sm">Modifier</a>
                         <form action="{{ route('beneficiaire.destroy', $beneficiaire) }}" method="POST" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce bénéficiaire ?');">
                             @csrf
-                            @method('DELETE')
+                            @method('DELETE') <!-- Ceci est essentiel pour indiquer DELETE -->
                             <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                        
                         </form>
                     </td>
                 </tr>

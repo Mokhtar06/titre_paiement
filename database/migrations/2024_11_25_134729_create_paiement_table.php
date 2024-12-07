@@ -16,8 +16,6 @@ return new class extends Migration
             $table->decimal('montant', 15, 2); 
             $table->timestamp('date_paiement')->useCurrent(); 
             $table->enum('mode_paiement', ['carte', 'virement', 'cheque', 'espèces']); 
-            $table->foreignId('id_compte')->constrained('compte'); 
-            $table->foreignId('id_beneficiaire')->constrained('beneficiaire'); 
             $table->enum('status', ['en attente', 'réussi', 'échoué']); 
             $table->timestamps(); 
         });

@@ -39,7 +39,7 @@ class beneficiaireController extends Controller
     
         $beneficiaire->update($request->all());
     
-        return redirect()->route('beneficiaires.index')->with('success', 'Bénéficiaire mis à jour avec succès.');
+        return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaire mis à jour avec succès.');
     }
 
     public function store(Request $request)
@@ -55,14 +55,21 @@ class beneficiaireController extends Controller
         
         Beneficiaire::create($request->all());
 
-        return redirect()->route('beneficiaires.index')->with('success', 'Bénéficiaire créé avec succès.');
+        return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaire créé avec succès.');
     }
 
     public function destroy(Beneficiaire $beneficiaire)
     {
+        // Supprimez les paiements associés au bénéficiaire (si applicable)
+        $beneficiaire->paiements()->delete();
+        
+        // Supprimez le bénéficiaire
         $beneficiaire->delete();
-        return redirect()->route('beneficiaires.index')->with('success', 'Bénéficiaire supprimé avec succès.');
+    
+        return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaire supprimé avec succès.');
     }
+    
+    
 
     public function import(Request $request)
     {
@@ -72,9 +79,9 @@ class beneficiaireController extends Controller
 
         try {
             Excel::import(new BeneficiairesInport, $request->file('file'));
-            return redirect()->route('beneficiaires.index')->with('success', 'Bénéficiaires importés avec succès!');
+            return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaires importés avec succès!');
         } catch (\Exception $e) {
-            return redirect()->route('beneficiaires.index')->with('error', 'Erreur lors de l\'importation : ' . $e->getMessage());
+            return redirect()->route('beneficiaire.index')->with('error', 'Erreur lors de l\'importation : ' . $e->getMessage());
         }
     }
 

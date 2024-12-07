@@ -1,41 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- style css -->
-    <style>
-        .form-group label {
-            font-weight: bold;
-            color: #333;
-        }
-
-        .form-control {
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .form-control:focus {
-            border-color: #0056b3;
-            box-shadow: 0 0 5px rgba(0, 86, 179, 0.5);
-        }
-
-        .btn-warning {
-            background-color: #f0ad4e;
-            border-color: #eea236;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background-color: #ec971f;
-            border-color: #d58512;
-        }
-
-        .container {
-            max-width: 800px;
-            margin-top: 50px;
-        }
-    </style>
-
 <div class="container">
     <h1>Éditer le Paiement</h1>
 

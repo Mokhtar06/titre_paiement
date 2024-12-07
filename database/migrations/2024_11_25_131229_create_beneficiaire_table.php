@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique(); 
             $table->string('telephone'); 
             $table->text('adresse'); 
-            $table->enum('type_beneficiaire', ['personne physique', 'personne morale']); 
+            $table->enum('type_beneficiaire', ['Personne', 'Entreprise']); 
             $table->timestamps(); 
         });
     }

@@ -18,11 +18,9 @@ class BeneficiairesInport implements ToCollection, WithHeadingRow
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
-            // Vérifier la validité des données avant l'insertion
             if (isset($row['nom'], $row['prenom'], $row['adresse'], $row['telephone'], $row['email'], $row['type_beneficiaire'])) {
-                // Créer ou mettre à jour un bénéficiaire dans la base de données
                 Beneficiaire::updateOrCreate(
-                    ['email' => $row['email']], // Clé unique (par exemple, email)
+                    ['email' => $row['email']], 
                     [
                         'nom' => $row['nom'],
                         'prenom' => $row['prenom'],

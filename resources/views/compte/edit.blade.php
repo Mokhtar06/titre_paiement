@@ -11,35 +11,48 @@
             </div>
         @endif
 
-        <form action="{{ route('compte.update', $compte) }}" method="POST">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('compte.update', $compte->id) }}" method="POST">
             @csrf
             @method('PUT') <!-- Indiquer que c'est une mise à jour -->
 
             <div class="row mb-3">
-                <label for="num_compt" class="col-md-3 col-form-label">Numéro du Compte</label>
+                <label for="numero" class="col-md-3 col-form-label">Numéro du Compte</label>
                 <div class="col-md-9">
-                    <input type="text" name="num_compt" id="num_compt" class="form-control" value="{{ $compte->num_compt }}" required>
+                    <input type="text" name="numero" id="numero" class="form-control" value="{{ $compte->numero }}" required>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <label for="type_compt" class="col-md-3 col-form-label">Type de Compte</label>
+                <label for="type_compte" class="col-md-3 col-form-label">Type de Compte</label>
                 <div class="col-md-9">
-                    <input type="text" name="type_compt" id="type_compt" class="form-control" value="{{ $compte->type_compt }}" required>
+                    <select name="type_compte" id="type_compte" class="form-control" required>
+                        <option value="courant" @if ($compte->type_compte === 'courant') selected @endif>Courant</option>
+                        <option value="épargne" @if ($compte->type_compte === 'épargne') selected @endif>Épargne</option>
+                    </select>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <label for="sold" class="col-md-3 col-form-label">Solde</label>
+                <label for="solde" class="col-md-3 col-form-label">Solde</label>
                 <div class="col-md-9">
-                    <input type="number" name="sold" id="sold" class="form-control" value="{{ $compte->sold }}" required step="0.01">
+                    <input type="number" name="solde" id="solde" class="form-control" value="{{ $compte->solde }}" required step="0.01">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <label for="date_creation" class="col-md-3 col-form-label">Date de Création</label>
                 <div class="col-md-9">
-                    <input type="date" name="date_creation" id="date_creation" class="form-control" value="{{ $compte->date_creation->format('Y-m-d') }}" required>
+                    <input type="date" name="date_creation" id="date_creation" class="form-control" value="{{ \Carbon\Carbon::parse($compte->date_creation)->format('Y-m-d') }}" required>
                 </div>
             </div>
 

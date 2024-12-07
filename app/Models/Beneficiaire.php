@@ -1,4 +1,5 @@
 <?php
+// App\Models\Beneficiaire.php
 
 namespace App\Models;
 
@@ -9,7 +10,7 @@ class Beneficiaire extends Model
 {
     use HasFactory;
 
-    protected $table='beneficiaire';
+    protected $table = 'beneficiaire';
 
     protected $fillable = [
         'nom',
@@ -19,4 +20,10 @@ class Beneficiaire extends Model
         'adresse',
         'type_beneficiaire',
     ];
+
+    // Définir la relation hasMany avec Paiement
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class, 'id_beneficiaire');
+    }
 }

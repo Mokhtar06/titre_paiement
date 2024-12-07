@@ -15,7 +15,7 @@ class ComptesExport implements FromCollection, WithHeadings
     public function collection()
     {
         // Récupère toutes les données des comptes depuis la base de données
-        return Compte::all(['num_compt', 'type_compt', 'sold', 'date_creation', 'description']);
+        return Compte::all(['numero', 'type_compte', 'solde', 'date_creation', 'description']);
     }
 
     /**
