@@ -34,28 +34,31 @@ class PaiementController extends Controller
 
     public function store(Request $request) 
     {
-        // $request->validate([
-        //     'montant' => 'required|numeric',
-        //     'date_paiement' => 'required|date',
-        //     'mode_paiement' => 'required|in:carte,virement,cheque,espèces',
-        //     'id_compte' => 'required|exists:compte,id',
-        //     'id_beneficiaire' => 'required|exists:beneficiaire,id',
-        //     'status' => 'required|in:en attente,réussi,échoué',
-        //     'motif_de_la_depence' => 'required|text',
-        //     'impulsion' => 'required|in:TVA,IMF,loyer,Exonéré',
-        // ]);
+        $request->validate([
+            'montant' => 'required|numeric',
+            'date_paiement' => 'required|date',
+            'mode_paiement' => 'required|in:carte,virement,cheque,espèces',
+            'id_compte' => 'required|exists:compte,id',
+            'id_beneficiaire' => 'required|exists:beneficiaire,id',
+            'status' => 'required|in:en attente,réussi,échoué',
+            'motif_de_la_depence' => 'required|string', 
+            'impulsion' => 'required|in:TVA,IMF,loyer,Exonéré', 
+        ]);
     
-        // Paiement::create([
-        //     'montant' => $request->montant,
-        //     'date_paiement' => $request->date_paiement,
-        //     'mode_paiement' => $request->mode_paiement,
-        //     'id_compte' => $request->id_compte,
-        //     'id_beneficiaire' => $request->id_,  
-        //     'status' => $request->status,
-        // ]);
+        Paiement::create([
+            'montant' => $request->montant,
+            'date_paiement' => $request->date_paiement,
+            'mode_paiement' => $request->mode_paiement,
+            'id_compte' => $request->id_compte,
+            'id_beneficiaire' => $request->id_beneficiaire,
+            'status' => $request->status,
+            'motif_de_la_depence' => $request->motif_de_la_depence, 
+            'impulsion' => $request->impulsion,
+        ]);
     
         return redirect()->route('paiements.index')->with('success', 'Paiement ajouté avec succès!');
     }
+  
     
 
     
@@ -67,7 +70,6 @@ class PaiementController extends Controller
         $beneficiaires = Beneficiaire::all();
         return view('paiements.edit', compact('paiement', 'comptes', 'beneficiaires'));
     }
-
     public function update(Request $request, Paiement $paiement)
     {
         // Validation des données
@@ -80,11 +82,13 @@ class PaiementController extends Controller
             'motif_de_la_depence' => 'required|string',
             'impulsion' => 'required|in:TVA,IMF,loyer,Exonéré',
         ]);
-
+    
         $paiement->update($request->all());
+    
         // Rediriger avec un message de succès
         return redirect()->route('paiements.index')->with('success', 'Paiement mis à jour avec succès.');
     }
+    
 
 
     public function destroy($id)
@@ -173,7 +177,19 @@ class PaiementController extends Controller
     
         return ucfirst(trim($lettres)); // Capitalize the first letter for better formatting
     }
-    
+    function afficherDeuxPremiersChiffres($nombre) {
+    $nombreStr = (string)$nombre;
+    if (strlen($nombreStr) >= 2) {
+        return substr($nombreStr, 0, 2);
+    } else {
+        return $nombreStr;
+    }
+}
+
+function afficherAnneeActuelle() {
+    // Utiliser la fonction date() pour obtenir l'année actuelle
+    return date('Y');
+}
     public function show($id)
     {
         $comptes = Compte::all(); 
@@ -210,8 +226,8 @@ class PaiementController extends Controller
             $section->addText("INSTITUT SUPERIEUR NUMERIQUE:" , null, ['align' => Jc::LEFT]);
             $section->addText("Titre de paiement Numero:" , null, ['align' => Jc::CENTER]);
 
-            $section->addText("Imputation budgetaire: Compte principale ");
-            $section->addText("Bénéficiaire: ");
+            $section->addText("Imputation budgetaire: Compte principale: "." ".$this->afficherDeuxPremiersChiffres($paiement->compte->numero));
+            $section->addText("Bénéficiaire:" .$paiement->beneficiaire->nom . " " .$paiement->beneficiaire->prenom);
             $section->addText("Montant: " . $paiement->montant);
             $section->addText("Montant en lettres: " . $this->convertirMontantEnLettres($paiement->montant));
 
@@ -258,7 +274,7 @@ class PaiementController extends Controller
             $section->addText("Titre de paiement Numero:" , null, ['align' => Jc::CENTER]);
 
             $section->addText("Imputation budgetaire: Compte principale ");
-            $section->addText("Bénéficiaire: ");
+            $section->addText("Bénéficiaire:" .$paiement->beneficiaire->nom );
             $section->addText("Montant: " . $paiement->montant);
             $section->addText("Montant en lettres: " . $this->convertirMontantEnLettres($paiement->montant));
 

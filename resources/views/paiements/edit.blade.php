@@ -49,18 +49,19 @@
                 <option value="échoué" @if($paiement->status == 'échoué') selected @endif>Échoué</option>
             </select>
         </div>
+        
         <div class="form-group">
-            <label for="motif_da_la_depence">Motif de la depence</label>
-            <input type="text" class="form-control" id="motif_da_la_depence" name="motif_da_la_depence" value="{{ $paiement->motif_de_la_depence }}" required>
+            <label for="motif_de_la_depence">Motif de la dépense</label>
+            <input type="text" class="form-control" id="motif_de_la_depence" name="motif_de_la_depence" value="{{ $paiement->motif_de_la_depence }}" required>
         </div>
 
         <div class="form-group">
             <label for="impulsion">Impulsion</label>
             <select class="form-control" id="impulsion" name="impulsion" required>
-                <option value="en attente" @if($paiement->impulsion == 'TVA') selected @endif>TVA</option>
-                <option value="réussi" @if($paiement->impulsion == 'IMF') selected @endif>IMF</option>
-                <option value="échoué" @if($paiement->impulsion == 'loyer') selected @endif>loyer</option>
-                <option value="échoué" @if($paiement->impulsion == 'Exonéré') selected @endif>Exonéré</option>
+                <option value="TVA" @if($paiement->impulsion == 'TVA') selected @endif>TVA</option>
+                <option value="IMF" @if($paiement->impulsion == 'IMF') selected @endif>IMF</option>
+                <option value="loyer" @if($paiement->impulsion == 'loyer') selected @endif>Loyer</option>
+                <option value="Exonéré" @if($paiement->impulsion == 'Exonéré') selected @endif>Exonéré</option>
             </select>
         </div>
 
@@ -68,4 +69,3 @@
     </form>
 </div>
 @endsection
-

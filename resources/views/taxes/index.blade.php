@@ -2,32 +2,35 @@
 
 @section('content')
 <div class="container">
-<h2>Liste des Taxes</h2>
+    <h2>Liste des Taxes</h2>
 
-<table class="table">
-    <head>
-        <tr>
-    <th>Nom du taxe</th>
-    <th>Pourcentage du taxe</th>
-    <th>Actions</th>
-    </tr>
-    </head>
-    <tbody>
-        @foreach ($taxes as $taxe)
-        <tr>
-            <td>{{ $taxe->nom }}</td>
-            <td>{{ $taxe->pourcentage }}</td>
-            <td>
-            <a href="{{ route('taxes.edit', $taxe) }}" class="btn btn-warning btn-sm">Modifier</a>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
+    <!-- Message de succès -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
-
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom du taxe</th>
+                <th>Pourcentage du taxe</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($taxes as $taxe)
+            <tr>
+                <td>{{ $taxe->nom }}</td>
+                <td>{{ $taxe->pourcentage }}</td>
+                <td>
+                    <a href="{{ route('taxes.edit', $taxe->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
 </div>
-
-
 @endsection

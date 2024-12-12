@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('paiement', function (Blueprint $table) {
-            $table->string('motif_de_la_depence');
-            $table->enum('impulsion', ['TVA','IMF', 'Loyer', 'Exonéré'])->nullable();
+            $table->string('motif_de_la_depence')->default('Motif non spécifié')->after('status');
+            $table->enum('impulsion', ['TVA','IMF', 'Loyer', 'Exonéré']);
         });
     }
 
