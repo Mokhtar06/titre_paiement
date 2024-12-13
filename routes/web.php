@@ -51,3 +51,9 @@ Route::get('paiements/create',[PaiementController::class,'create'])->name('paiem
 // Routes poue les Taxes
 
 Route::resource('taxes', TaxeController::class);
+Route::get('/taxes/create', [TaxeController::class, 'create'])->name('taxes.create'); 
+Route::post('/taxes', [TaxeController::class, 'store'])->name('taxes.store');
+Route::delete('/taxes/{id}', [TaxeController::class, 'destroy'])->name('taxes.destroy');
+Route::post('/taxes/import', [TaxeController::class, 'import'])->name('taxes.import'); // Importation des taxes
+Route::get('/taxes/export', [TaxeController::class, 'export'])->name('taxes.export'); // Exportation des taxes
+Route::resource('taxes', TaxeController::class)->except(['show']);

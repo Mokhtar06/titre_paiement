@@ -224,7 +224,7 @@ function afficherAnneeActuelle() {
             $section->addText("MINISTERE DE L'ENSEIGNEMENT SUPERIEUR:", null, ['align' => Jc::LEFT]);
             $section->addText("ET DE LA RECHERCHE SCIENTIFIQUE:" , null, ['align' => Jc::LEFT]);
             $section->addText("INSTITUT SUPERIEUR NUMERIQUE:" , null, ['align' => Jc::LEFT]);
-            $section->addText("Titre de paiement Numero:" , null, ['align' => Jc::CENTER]);
+            $section->addText("Titre de paiement Numero:".$paiement->id . "/2024" , null, ['align' => Jc::CENTER]);
 
             $section->addText("Imputation budgetaire: Compte principale: "." ".$this->afficherDeuxPremiersChiffres($paiement->compte->numero));
             $section->addText("Bénéficiaire:" .$paiement->beneficiaire->nom . " " .$paiement->beneficiaire->prenom);
