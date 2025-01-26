@@ -12,6 +12,9 @@ class CompteController extends Controller
 {
     public function index()
     {
+        if (auth()->guest()) {
+            return redirect()->route('login');
+        }
         $comptes = Compte::all();
         return view('compte.index', compact('comptes'));
     }

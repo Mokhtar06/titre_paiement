@@ -12,6 +12,9 @@ class beneficiaireController extends Controller
 {
     public function index()
     {
+        if (auth()->guest()) {
+            return redirect()->route('login');
+        }
         $beneficiaires = Beneficiaire::all();
         return view('beneficiaire.index', compact('beneficiaires'));
     }

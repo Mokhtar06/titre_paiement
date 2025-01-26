@@ -19,6 +19,7 @@ class Paiement extends Model
         'id_compte',
         'id_beneficiaire',
         'status',
+        'impulsion'
     ];
 
     public function compte()

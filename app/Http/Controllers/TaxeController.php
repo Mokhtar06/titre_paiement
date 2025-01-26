@@ -12,6 +12,9 @@ class TaxeController extends Controller
 {
     public function index()
     {
+        if (auth()->guest()) {
+            return redirect()->route('login');
+        }
         $taxes = Taxe::all();
         return view('taxes.index', compact('taxes'));
     }
