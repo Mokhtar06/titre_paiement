@@ -3,6 +3,8 @@
 use App\Http\Controllers\CompteController;
 use App\Http\Controllers\beneficiaireController;
 use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\CompteurController;
+
 use App\Http\Controllers\TaxeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\controleruser;
@@ -53,9 +55,9 @@ Route::resource('paiements', PaiementController::class);
 Route::get('paiements',[PaiementController::class,'index'])->name('paiements.index');
 Route::get('paiements/create',[PaiementController::class,'create'])->name('paiement.create');
 Route::post('/paiements',[PaiementController::class,'store'])->name('paiements.store');
-Route::delete('paiements/{id}/{annee}', [PaiementController::class, 'destroy'])->name('paiements.destroy1');
-Route::get('paiements/{id}/{annee}/edit', [PaiementController::class, 'edit'])->name('paiements.edit1');
-Route::put('paiements/{id}/{annee}', [PaiementController::class, 'update'])->name('paiements.update1');
+Route::delete('paiements/{id}', [PaiementController::class, 'destroy'])->name('paiements.destroy1');
+Route::get('paiements/{id}/edit', [PaiementController::class, 'edit'])->name('paiements.edit1');
+Route::put('paiements/{id}', [PaiementController::class, 'update'])->name('paiements.update1');
 
 Route::resource('taxes', TaxeController::class)->except(['show']);
 
@@ -76,3 +78,7 @@ Route::post('/users', [controleruser::class, 'store'])->name('users.store');
 Route::get('/users/{user}/edit', [controleruser::class, 'edit'])->name('users.edit');
 Route::put('/users/{user}', [controleruser::class, 'update'])->name('users.update');
 Route::delete('/users/{user}', [controleruser::class, 'destroy'])->name('users.destroy');
+// route for compteure
+Route::get('compteurs', [CompteurController::class, 'index'])->name('compteurs.index'); 
+Route::get('compteurs/create', [CompteurController::class, 'create'])->name('compteurs.create');  
+Route::post('compteurs', [CompteurController::class, 'store'])->name('compteurs.store');  

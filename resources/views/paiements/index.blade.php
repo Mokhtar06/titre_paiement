@@ -42,7 +42,7 @@
                 <th>Motif de la dépense</th>
                 <th>Impulsion</th>
                 <th>Actions</th>
-                <th>Annee</th>
+                {{-- <th>Annee</th> --}}
 
             </tr>
         </thead>
@@ -58,11 +58,11 @@
                 <td>{{ $paiement->status }}</td>
                 <td>{{ $paiement->motif_de_la_depence }}</td>
                 <td>{{ $paiement->impulsion }}</td>
-                <td>{{ $paiement->annee }}</td>
+                {{-- <td>{{ $paiement->annee }}</td> --}}
                 <td>
-                    <a href="{{ route('paiements.edit1', [$paiement->id,$paiement->annee]) }}" class="btn btn-warning">Editer</a>
+                    <a href="{{ route('paiements.edit1', $paiement->id) }}" class="btn btn-warning">Editer</a>
                     <a href="{{ route('paiements.show', $paiement->id) }}" class="btn btn-primary">Voir</a>
-                    <form action="{{ route('paiements.destroy1', [$paiement->id, $paiement->annee]) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('paiements.destroy1', $paiement->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ?')">Supprimer</button>

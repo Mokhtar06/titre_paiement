@@ -37,7 +37,7 @@
                         <a class="nav-link active" href="{{ route('taxes.index') }}">Taxes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('paiement.NextId') }}">Année/id</a>
+                        <a class="nav-link active" href="{{ route('compteurs.index') }}">Année/id</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{{ route('logout') }}">Déconnexion</a>

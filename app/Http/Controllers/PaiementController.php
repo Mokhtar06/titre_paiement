@@ -35,8 +35,9 @@ class PaiementController extends Controller
         return view('paiements.create', compact('comptes', 'beneficiaires'));
     }
 
-    public function store(Request $request) 
+    public function store(Request $request)
     {
+        // Validation des données
         $request->validate([
             'montant' => 'required|numeric',
             'date_paiement' => 'required|date',
@@ -44,35 +45,74 @@ class PaiementController extends Controller
             'id_compte' => 'required|exists:compte,id',
             'id_beneficiaire' => 'required|exists:beneficiaire,id',
             'status' => 'required|in:en attente,réussi,échoué',
-            'motif_de_la_depence' => 'required|string', 
-            'impulsion' => 'required|in:TVA,IMF,loyer,Exonéré', 
+            'motif_de_la_depence' => 'required|string',
+            'impulsion' => 'required|in:TVA,IMF,loyer,Exonéré',
         ]);
     
-        Paiement::create([
-            'montant' => $request->montant,
-            'date_paiement' => $request->date_paiement,
-            'mode_paiement' => $request->mode_paiement,
-            'id_compte' => $request->id_compte,
-            'id_beneficiaire' => $request->id_beneficiaire,
-            'status' => $request->status,
-            'motif_de_la_depence' => $request->motif_de_la_depence, 
-            'impulsion' => $request->impulsion,
-        ]);
+        // Démarrer une transaction pour garantir l'intégrité des données
+        DB::beginTransaction();
     
-        return redirect()->route('paiements.index')->with('success', 'Paiement ajouté avec succès!');
+        try {
+            $annee = date('Y', strtotime($request->date_paiement));
+    
+            // Sélectionner et verrouiller la ligne correspondante dans la table `compteur`
+            $compteur = DB::table('compteur')
+                ->where('annee', $annee)
+                ->lockForUpdate() // Verrouiller la ligne pour éviter les conflits
+                ->first();
+    
+            // Si l'année n'existe pas dans la table `compteur`, la créer avec un compteur initialisé à 1
+            if (!$compteur) {
+                $id_compt = 1;
+                DB::table('compteur')->insert([
+                    'annee' => $annee,
+                    'compteur' => $id_compt,
+                ]);
+            } else {
+                // Incrémenter le compteur
+                $id_compt = $compteur->compteur + 1;
+            }
+    
+            // Insérer le paiement avec le nouvel `id_compt`
+            Paiement::create([
+                'montant' => $request->montant,
+                'date_paiement' => $request->date_paiement,
+                'mode_paiement' => $request->mode_paiement,
+                'id_compte' => $request->id_compte,
+                'id_beneficiaire' => $request->id_beneficiaire,
+                'status' => $request->status,
+                'motif_de_la_depence' => $request->motif_de_la_depence,
+                'impulsion' => $request->impulsion,
+                
+            ]);
+    
+            // Mettre à jour le compteur dans la table `compteur`
+            DB::table('compteur')
+                ->where('annee', $annee)
+                ->update(['compteur' => $id_compt]);
+    
+            // Valider la transaction
+            DB::commit();
+    
+            return redirect()->route('paiements.index')->with('success', 'Paiement ajouté avec succès!');
+        } catch (\Exception $e) {
+            // En cas d'erreur, annuler la transaction
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout du paiement: ' . $e->getMessage());
+        }
     }
   
-    public function edit($id, $annee)
+    public function edit($id)
     {
 
-        $paiement = Paiement::where('id', $id)->where('annee', $annee)->firstOrFail();
+        $paiement = Paiement::where('id', $id)->firstOrFail();
         $comptes = Compte::all();
         $beneficiaires = Beneficiaire::all();
 
         return view('paiements.edit', compact('paiement', 'comptes', 'beneficiaires'));
 }
 
-    public function update(Request $request, $id, $annee)
+    public function update(Request $request, $id)
     {
             $request->validate([
                 'montant' => 'required|numeric',
@@ -83,7 +123,7 @@ class PaiementController extends Controller
                 'motif_de_la_depence' => 'required|string',
                 'impulsion' => 'required|in:TVA,IMF,loyer,Exonéré',
             ]);
-            $paiement = Paiement::where('id', $id)->where('annee', $annee)->firstOrFail();
+            $paiement = Paiement::where('id', $id)->firstOrFail();
             $paiement->update($request->all());
         
             return redirect()->route('paiements.index')->with('success', 'Paiement mis à jour avec succès.');
@@ -93,7 +133,7 @@ class PaiementController extends Controller
     public function destroy($id, $annee)
     {
         try {
-            $paiement = Paiement::where('id', $id)->where('annee', $annee);
+            $paiement = Paiement::where('id', $id)->firstOrFail();
             $paiement->delete();
     
             return redirect()->route('paiements.index')->with('success', 'Paiement supprimé avec succès.');
@@ -231,7 +271,7 @@ function afficherAnneeActuelle() {
     $section->addText("MINISTERE DE L'ENSEIGNEMENT SUPERIEUR", ['bold' => true], ['align' => Jc::CENTER]);
     $section->addText("ET DE LA RECHERCHE SCIENTIFIQUE", ['bold' => true], ['align' => Jc::CENTER]);
     $section->addText("INSTITUT SUPÉRIEUR NUMÉRIQUE", ['bold' => true], ['align' => Jc::CENTER]);
-    $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee, ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
+    $section->addText("Titre de paiement N° " . $paiement->id . "/" .$this->afficherAnneeActuelle(), ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
 
     // Corps
     $section->addText("Imputation budgétaire : Compte Principale :"." " .$this->afficherDeuxPremiersChiffres($paiement->compte->numero)." ". "SOUS Compte "." ". $paiement->compte->numero, ['bold' => true], ['align' => Jc::LEFT]);
@@ -280,7 +320,7 @@ function afficherAnneeActuelle() {
  $section->addText("MINISTERE DE L'ENSEIGNEMENT SUPERIEUR", ['bold' => true], ['align' => Jc::CENTER]);
  $section->addText("ET DE LA RECHERCHE SCIENTIFIQUE", ['bold' => true], ['align' => Jc::CENTER]);
  $section->addText("INSTITUT SUPÉRIEUR NUMÉRIQUE", ['bold' => true], ['align' => Jc::CENTER]);
- $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee, ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
+ $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee.$this->afficherAnneeActuelle(), ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
 
  // Corps
  $section->addText("Imputation budgétaire : Compte Principale :"." " .$this->afficherDeuxPremiersChiffres($paiement->compte->numero)." ". "SOUS Compte "." ". $paiement->compte->numero, ['bold' => true], ['align' => Jc::LEFT]);
@@ -330,7 +370,7 @@ function afficherAnneeActuelle() {
   $section->addText("MINISTERE DE L'ENSEIGNEMENT SUPERIEUR", ['bold' => true], ['align' => Jc::CENTER]);
   $section->addText("ET DE LA RECHERCHE SCIENTIFIQUE", ['bold' => true], ['align' => Jc::CENTER]);
   $section->addText("INSTITUT SUPÉRIEUR NUMÉRIQUE", ['bold' => true], ['align' => Jc::CENTER]);
-  $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee, ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
+  $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee.$this->afficherAnneeActuelle(), ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
 
   // Corps
   $section->addText("Imputation budgétaire : Compte Principale :"." " .$this->afficherDeuxPremiersChiffres($paiement->compte->numero)." ". "SOUS Compte "." ". $paiement->compte->numero, ['bold' => true], ['align' => Jc::LEFT]);
@@ -376,7 +416,7 @@ function afficherAnneeActuelle() {
     $section->addText("MINISTERE DE L'ENSEIGNEMENT SUPERIEUR", null, ['align' => Jc::CENTER]);
     $section->addText("ET DE LA RECHERCHE SCIENTIFIQUE", null, ['align' => Jc::CENTER]);
     $section->addText("INSTITUT SUPÉRIEUR NUMÉRIQUE", ['bold' => true], ['align' => Jc::CENTER]);
-    $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee, ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
+    $section->addText("Titre de paiement N° " . $paiement->id . "/" .$paiement->annee.$this->afficherAnneeActuelle(), ['bold' => true, 'underline' => 'single'], ['align' => Jc::CENTER]);
 
     // Corps
     $section->addText("Imputation budgétaire : Compte Principale :"." " .$this->afficherDeuxPremiersChiffres($paiement->compte->numero)." ". "SOUS Compte "." ". $paiement->compte->numero, null, ['align' => Jc::LEFT]);
