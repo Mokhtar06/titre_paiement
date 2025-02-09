@@ -1,6 +1,4 @@
-@extends('layouts.app')
 
-@section('content')
 <div class="container">
     <h1 class="mb-4">Liste des compteurs</h1>
     
@@ -34,4 +32,4 @@
         </tbody>
     </table>
 </div>
-@endsection
+

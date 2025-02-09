@@ -1,6 +1,4 @@
-@extends('layouts.app')
 
-@section('content')
 <div class="container mt-5">
     <h1 class="mb-4">Liste des utilisateurs</h1>
     <a href="{{ route('users.create') }}" class="btn btn-dark mb-3">Créer un nouvel utilisateur</a>
@@ -39,4 +37,4 @@
         </tbody>
     </table>
 </div>
-@endsection
+

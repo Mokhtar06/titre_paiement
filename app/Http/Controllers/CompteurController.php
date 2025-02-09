@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+
 use App\Models\Compteur;
 use Illuminate\Http\Request;
 
@@ -15,11 +17,13 @@ class CompteurController extends Controller
 
     public function create()
     {
+        if(Auth::user()->isAdmin()){
         return view('compteurs.create');
-    }
+    }}
 
     public function store(Request $request)
     {
+        if(Auth::user()->isAdmin()){
         $request->validate([
             'annee' => 'required|integer',
             'compteur' => 'required|integer',
@@ -27,6 +31,6 @@ class CompteurController extends Controller
 
         Compteur::create($request->all());
         return redirect()->route('compteurs.index')->with('success', 'Compteur ajouté avec succès!');
-    }
+    }}
 
 }

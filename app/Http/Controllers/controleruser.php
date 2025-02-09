@@ -9,12 +9,19 @@ use Illuminate\Support\Facades\Hash;
 
 class controleruser extends Controller
 {
+
+    public function profil()
+{
+    $user = auth()->user(); // Récupérer l'utilisateur connecté
+    return view('users.profil', compact('user')); // Charger la vue avec l'utilisateur
+}
   
     public function showLoginForm()
     {
         // Assurez-vous que la vue connexion.connexion existe
         return view('connexion.connexion');
     }
+
 
     public function home()
     {
@@ -28,9 +35,12 @@ class controleruser extends Controller
             'password' => 'required|min:6',
         ]);
     
+        
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $request->session()->regenerate();
-            return redirect()->route('compte.index')->with('success', 'Vous avez été connecté avec succès.');
+            if (Auth::user()->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->route('users.profil');
         }
 
         return back()->withErrors([
@@ -54,44 +64,64 @@ class controleruser extends Controller
     $users = User::all();
     return view('users.index', compact('users'));
 }
+
+
 public function create()
 {
-    return view('users.create');
+    if(Auth::user()->isAdmin()){
+        return view('users.create');
+    }
+    
 }
 public function edit($id)
 {
     // Trouver l'utilisateur par son ID
-    $user = User::findOrFail($id);
-    return view('users.edit', compact('user'));
+    if(Auth::user()->isAdmin()){
+        $user = User::findOrFail($id);
+        return view('users.edit', compact('user'));
+    }
+    
 }
 public function destroy($id)
 {
-    $user = User::findOrFail($id);
-    $user->delete();
-    return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès.');
+    if(Auth::user()->isAdmin()){
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès.');
+    }
+    
 }
 public function store(Request $request)
 {
     // Validation des champs
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:6',
-    ]);
+    if(Auth::user()->isAdmin()){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'role' => 'required|in:user,admin',
+        ]);
+    
+    
 
     // Création de l'utilisateur
     User::create([
         'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request->password),
+        'role' => $request->role,
     ]);
 
     // Rediriger avec un message de succès
     return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
+    }
 }
 public function update(Request $request, $id)
 {
     // Trouver l'utilisateur
+    if(Auth::user()->isAdmin()){
+
+    
     $user = User::findOrFail($id);
 
     // Validation des champs
@@ -99,11 +129,13 @@ public function update(Request $request, $id)
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
         'password' => 'nullable|min:6',
+        'role' => 'required|in:user,admin',
     ]);
 
     // Mise à jour des données
     $user->name = $request->name;
     $user->email = $request->email;
+    $user->role = $request->role;
 
     // Si un mot de passe est fourni, on le met à jour
     if ($request->password) {
@@ -115,6 +147,7 @@ public function update(Request $request, $id)
 
     // Rediriger avec un message de succès
     return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès.');
+    }
 }
 
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CompteController;
 use App\Http\Controllers\beneficiaireController;
 use App\Http\Controllers\PaiementController;
@@ -72,6 +73,8 @@ Route::get('/accueil', function () {
 Route::get('/paiements-next-id', [PaiementController::class,'showLastIdPerYear'])->name('paiement.NextId');
 Route::post('/paiement/update-next-id', [PaiementController::class, 'updateNextId'])->name('paiement.updateNextId');
 // users
+Route::get('/profil', [controleruser::class, 'profil'])->name('users.profil');
+
 Route::get('/users', [controleruser::class, 'index'])->name('users.index');
 Route::get('/users/create', [controleruser::class, 'create'])->name('users.create');
 Route::post('/users', [controleruser::class, 'store'])->name('users.store');
@@ -82,3 +85,8 @@ Route::delete('/users/{user}', [controleruser::class, 'destroy'])->name('users.d
 Route::get('compteurs', [CompteurController::class, 'index'])->name('compteurs.index'); 
 Route::get('compteurs/create', [CompteurController::class, 'create'])->name('compteurs.create');  
 Route::post('compteurs', [CompteurController::class, 'store'])->name('compteurs.store');  
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});

@@ -17,6 +17,7 @@ use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use Illuminate\Support\Facades\Validator;
+use Auth;
 class PaiementController extends Controller
 {
     public function index()
@@ -30,14 +31,21 @@ class PaiementController extends Controller
 
     public function create()
     {
+        if(Auth::user()->isAdmin()){
         $comptes = Compte::all(); 
         $beneficiaires = Beneficiaire::all(); 
         return view('paiements.create', compact('comptes', 'beneficiaires'));
-    }
+        }
+        else{
+            $paiements = Paiement::all();
+            return view('paiements.index', compact('paiements'));
+        }
+}
 
     public function store(Request $request)
     {
         // Validation des données
+        if(Auth::user()->isAdmin()){
         $request->validate([
             'montant' => 'required|numeric',
             'date_paiement' => 'required|date',
@@ -100,20 +108,30 @@ class PaiementController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Une erreur est survenue lors de l\'ajout du paiement: ' . $e->getMessage());
         }
+    }else{
+        $paiements = Paiement::all();
+        return view('paiements.index', compact('paiements'));
     }
+}
   
     public function edit($id)
     {
 
+        if(Auth::user()->isAdmin()){
         $paiement = Paiement::where('id', $id)->firstOrFail();
         $comptes = Compte::all();
         $beneficiaires = Beneficiaire::all();
 
         return view('paiements.edit', compact('paiement', 'comptes', 'beneficiaires'));
+    }else{
+        $paiements = Paiement::all();
+        return view('paiements.index', compact('paiements'));
+    }
 }
 
     public function update(Request $request, $id)
     {
+        if(Auth::user()->isAdmin()){
             $request->validate([
                 'montant' => 'required|numeric',
                 'mode_paiement' => 'required|in:carte,virement,cheque,espèces',
@@ -127,11 +145,15 @@ class PaiementController extends Controller
             $paiement->update($request->all());
         
             return redirect()->route('paiements.index')->with('success', 'Paiement mis à jour avec succès.');
-        
+        }else{
+            $paiements = Paiement::all();
+            return view('paiements.index', compact('paiements'));
+        }
 
     }
     public function destroy($id, $annee)
     {
+        if(Auth::user()->isAdmin()){
         try {
             $paiement = Paiement::where('id', $id)->firstOrFail();
             $paiement->delete();
@@ -140,7 +162,11 @@ class PaiementController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('paiements.index')->with('error', 'Une erreur s\'est produite lors de la suppression du paiement.');
         }
+    }else{
+        $paiements = Paiement::all();
+        return view('paiements.index', compact('paiements'));
     }
+}
 
 
     // public function export()
@@ -151,6 +177,7 @@ class PaiementController extends Controller
    
     public function import(Request $request)
     {
+        if(Auth::user()->isAdmin()){
     $request->validate([
         'file' => 'required|mimes:xlsx,csv',
     ]);
@@ -158,7 +185,11 @@ class PaiementController extends Controller
     Excel::import(new PaiementImport, $request->file('file'));
 
     return back()->with('success', 'Les paiements ont été importés avec succès.');
+    }else{
+        $paiements = Paiement::all();
+        return view('paiements.index', compact('paiements'));
     }
+}
 
 function convertirMontantEnLettres($montant) {
         $montant = number_format($montant, 2, '.', ''); // Assurez-vous que le montant est bien formaté avec deux décimales
