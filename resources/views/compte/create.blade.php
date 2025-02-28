@@ -1,6 +1,31 @@
-@extends('layouts.app')
+<html>
+<head>
+    <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons (si nécessaire) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
-@section('content')
+</head>
+<body>
+    
+
+<style>
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn {
+        min-width: 100px;
+    }
+    .btn-secondary {
+        margin-left: 10px;
+    }
+</style>
+  
     <div class="container">
         <h2>Créer un Nouveau Compte</h2>
 
@@ -31,8 +56,39 @@
             </div>
             <div class="d-flex justify-content-start">
                 <button type="submit" class="btn btn-primary">Créer</button>
-                <a href="{{ route('compte.index') }}" class="btn btn-secondary ml-2">Annuler</a>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary ml-2">Annuler</a>
             </div>
         </form>
     </div>
-@endsection
+<!-- Bootstrap JS (si ce n'est pas déjà inclus) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (event) {
+            let valid = true;
+
+            // Vérifier que le numéro du compte est bien rempli
+            const numero = document.getElementById("numero");
+            if (numero.value.trim() === "") {
+                valid = false;
+                alert("Le numéro du compte est obligatoire !");
+            }
+
+            // Vérifier que le solde est un nombre positif
+            const solde = document.getElementById("solde");
+            if (parseFloat(solde.value) < 0) {
+                valid = false;
+                alert("Le solde ne peut pas être négatif !");
+            }
+
+            if (!valid) {
+                event.preventDefault(); // Empêche l'envoi du formulaire si validation échoue
+            }
+        });
+    });
+</script>
+</body>
+</html>

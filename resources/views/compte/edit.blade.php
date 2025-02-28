@@ -1,6 +1,29 @@
-@extends('layouts.app')
+<html>
+    <head>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
 
-@section('content')
+    <style>
+    .container {
+        max-width: 650px;
+        margin-top: 50px;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .btn {
+        min-width: 150px;
+    }
+    .btn-secondary {
+        margin-left: 10px;
+    }
+</style>
+
+        
+    
     <div class="container">
         <h2 class="mb-4">Modifier le Compte</h2>
 
@@ -66,9 +89,39 @@
             <div class="row mb-3">
                 <div class="col-md-9 offset-md-3">
                     <button type="submit" class="btn btn-primary">Mettre à jour le compte</button>
-                    <a href="{{ route('compte.index') }}" class="btn btn-secondary ml-2">Annuler</a>
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary ml-2">Annuler</a>
                 </div>
             </div>
         </form>
     </div>
-@endsection
+    <!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("updateForm");
+
+        form.addEventListener("submit", function (event) {
+            let valid = true;
+
+            const numero = document.getElementById("numero");
+            if (numero.value.trim() === "") {
+                valid = false;
+                alert("Le numéro du compte est obligatoire !");
+            }
+
+            const solde = document.getElementById("solde");
+            if (parseFloat(solde.value) < 0) {
+                valid = false;
+                alert("Le solde ne peut pas être négatif !");
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+    </body>
+    </html>

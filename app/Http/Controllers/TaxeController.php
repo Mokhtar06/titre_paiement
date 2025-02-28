@@ -16,7 +16,7 @@ class TaxeController extends Controller
             return redirect()->route('login');
         }
         $taxes = Taxe::all();
-        return view('taxes.index', compact('taxes'));
+        return view('admin.taxes_index', compact('taxes'));
     }
 
     public function edit($id)
@@ -38,7 +38,7 @@ class TaxeController extends Controller
     
         Taxe::create($request->only(['nom', 'pourcentage']));
     
-        return redirect()->route('taxes.index')->with('success', 'Taxe ajoutée avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Taxe ajoutée avec succès.');
     }
     
 
@@ -52,14 +52,14 @@ class TaxeController extends Controller
     
         $taxe->pourcentage = $request->taxe;
         $taxe->save();  
-        return redirect()->route('taxes.index')->with('success', 'La taxe a été mise à jour avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'La taxe a été mise à jour avec succès.');
     }
     public function destroy($id)
 {
     $taxe = Taxe::findOrFail($id); 
     $taxe->delete(); 
 
-    return redirect()->route('taxes.index')->with('success', 'Taxe supprimée avec succès.');
+    return redirect()->route('admin.dashboard')->with('success', 'Taxe supprimée avec succès.');
 }
 public function export()
     {

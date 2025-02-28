@@ -90,3 +90,13 @@ Route::post('compteurs', [CompteurController::class, 'store'])->name('compteurs.
 Route::middleware(['auth'])->group(function () {
     Route::get('admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
+
+// routes admin
+
+Route::get('/admin/comptes', [AdminController::class, 'compt_index'])->name('admin.compt_index');
+Route::get('/admin/beneficiaire', [AdminController::class, 'benefi_index'])->name('admin.benefi_index');
+Route::get('/admin/paiement', [AdminController::class, 'paieme_index'])->name('admin.paieme_index');
+Route::get('/admin/taxes', [AdminController::class, 'taxes_index'])->name('admin.taxes_index');
+Route::get('/admin/dashboard/stats', [AdminController::class, 'getStats'])->name('admin.dashboard.stats');
+
+

@@ -17,7 +17,7 @@ class CompteController extends Controller
             return redirect()->route('login');
         }
         $comptes = Compte::all();
-        return view('compte.index', compact('comptes'));
+        return view('admin.compt_index', compact('comptes'));
     }
 
     public function create()
@@ -26,7 +26,7 @@ class CompteController extends Controller
         return view('compte.create');
         }else{
             $comptes = Compte::all();
-            return view('compte.index', compact('comptes'));
+            return view('admin.compt_index', compact('comptes'));
         }
     }
 
@@ -42,10 +42,10 @@ class CompteController extends Controller
         ]);
 
         Compte::create($request->all());
-        return redirect()->route('compte.index')->with('success', 'Compte créé avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Compte créé avec succès.');
     }else{
         $comptes = Compte::all();
-        return view('compte.index', compact('comptes'));
+        return view('admin.dashboard', compact('comptes'));
     }
 }
 
@@ -55,7 +55,7 @@ class CompteController extends Controller
         return view('compte.edit', compact('compte'));
     }else{
         $comptes = Compte::all();
-        return view('compte.index', compact('comptes'));
+        return view('admin.dashboard', compact('comptes'));
     }
 }
 
@@ -71,10 +71,10 @@ class CompteController extends Controller
         ]);
         
         $compte->update($request->all());
-        return redirect()->route('compte.index')->with('success', 'Compte mis à jour avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Compte mis à jour avec succès.');
     }else{
         $comptes = Compte::all();
-        return view('compte.index', compact('comptes'));
+        return view('admin.dashboard', compact('comptes'));
     }
 }
 
@@ -82,10 +82,10 @@ class CompteController extends Controller
     {
         if(Auth::user()->isAdmin()){
             $compte->delete();
-            return redirect()->route('compte.index')->with('success', 'Compte supprimé avec succès.');
+            return redirect()->route('admin.dashboard')->with('success', 'Compte supprimé avec succès.');
     }else{
         $comptes = Compte::all();
-        return view('compte.index', compact('comptes'));
+        return view('admin.dashboard', compact('comptes'));
     }
 }
 

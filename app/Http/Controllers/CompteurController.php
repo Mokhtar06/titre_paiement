@@ -30,7 +30,7 @@ class CompteurController extends Controller
         ]);
 
         Compteur::create($request->all());
-        return redirect()->route('compteurs.index')->with('success', 'Compteur ajouté avec succès!');
+        return redirect()->route('admin.dashboard')->with('success', 'Compteur ajouté avec succès!');
     }}
 
 }

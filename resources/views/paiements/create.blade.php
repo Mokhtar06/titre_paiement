@@ -1,73 +1,77 @@
 {{-- @if (Session::has('user_id')) --}}
-@extends('layouts.app')
+<html>
+    <head><!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-@section('content')
+<body>
+    
 <style>
-    /* Styles du formulaire */
     .container {
-        margin-top: 50px;
-        max-width: 800px;
-    }
+    margin-top: 50px;
+    max-width: 800px;
+}
 
-    h1 {
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 2rem;
-        color: #4CAF50;
-    }
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #4CAF50;
+}
 
-    form {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-    .form-group {
-        margin-bottom: 20px;
-    }
+.form-group {
+    margin-bottom: 20px;
+}
 
-    label {
-        font-size: 1rem;
-        font-weight: bold;
-        color: #333;
-    }
+label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
 
-    input[type="number"], input[type="date"], select {
-        width: 100%;
-        padding: 10px;
-        font-size: 1rem;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
+input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
 
-    button[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 5px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-    button[type="submit"]:hover {
-        background-color: #0056b3;
-    }
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
 
-    .alert {
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #f8d7da;
-        color: #721c24;
-        border-radius: 5px;
-        font-size: 1rem;
-    }
+.alert {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+    font-size: 1rem;
+}
 
-    .is-invalid {
-        border-color: #dc3545;
-    }
+.is-invalid {
+    border-color: #dc3545;
+}
+
 </style>
 
 <div class="container">
@@ -168,7 +172,24 @@
         <button type="submit" class="btn btn-primary">Ajouter le Paiement</button>
     </form>
 </div>
-@endsection
+<!-- Bootstrap Bundle avec Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let form = document.querySelector("form");
+        form.addEventListener("submit", function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add("was-validated");
+        }, false);
+    });
+</script>
+
+
+</body>
+</html>
 {{-- @else
 <script>
     window.location.href = "{{ route('connexion.form') }}";

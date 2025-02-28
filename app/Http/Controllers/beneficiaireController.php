@@ -17,7 +17,7 @@ class beneficiaireController extends Controller
             return redirect()->route('login');
         }
         $beneficiaires = Beneficiaire::all();
-        return view('beneficiaire.index', compact('beneficiaires'));
+        return view('admin.benefi_index', compact('beneficiaires'));
     }
 
     public function create()
@@ -26,17 +26,17 @@ class beneficiaireController extends Controller
             return view('beneficiaire.create');
         }else{
             $beneficiaires = Beneficiaire::all();
-            return view('beneficiaire.index', compact('beneficiaires'));
+            return view('admin.benefi_index', compact('beneficiaires'));
         }
     }
 
     public function edit(Beneficiaire $beneficiaire)
     {
         if(Auth::user()->isAdmin()){
-        return view('beneficiaire.edit', compact('beneficiaire'));
+        return view('beneficiair.edit', compact('beneficiaire'));
         }else{
             $beneficiaires = Beneficiaire::all();
-            return view('beneficiaire.index', compact('beneficiaires'));
+            return view('admin.dashboard', compact('beneficiaires'));
         }
     }
 
@@ -54,10 +54,10 @@ class beneficiaireController extends Controller
     
         $beneficiaire->update($request->all());
     
-        return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaire mis à jour avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Bénéficiaire mis à jour avec succès.');
     } else{
         $beneficiaires = Beneficiaire::all();
-        return view('beneficiaire.index', compact('beneficiaires'));
+        return view('admin.dashboard', compact('beneficiaires'));
     }
     }
 
@@ -75,10 +75,10 @@ class beneficiaireController extends Controller
         
         Beneficiaire::create($request->all());
 
-        return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaire créé avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Bénéficiaire créé avec succès.');
     }else{
         $beneficiaires = Beneficiaire::all();
-        return view('beneficiaire.index', compact('beneficiaires'));
+        return view('admin.dashboard', compact('beneficiaires'));
     }
 }
 
@@ -91,10 +91,10 @@ class beneficiaireController extends Controller
         // Supprimez le bénéficiaire
         $beneficiaire->delete();
     
-        return redirect()->route('beneficiaire.index')->with('success', 'Bénéficiaire supprimé avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Bénéficiaire supprimé avec succès.');
     }else{
         $beneficiaires = Beneficiaire::all();
-        return view('beneficiaire.index', compact('beneficiaires'));
+        return view('admin.dashboard', compact('beneficiaires'));
     }
 }
     

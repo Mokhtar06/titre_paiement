@@ -1,7 +1,79 @@
 {{-- @if (Session::has('user_id')) --}}
-@extends('layouts.app')
+<html>
+    <head>
+        <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-@section('content')
+    </head>
+<body>
+    <style>
+        .container {
+    margin-top: 50px;
+    max-width: 800px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: #ffc107; /* Jaune Bootstrap */
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="number"], input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button[type="submit"] {
+    background-color: #ffc107;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #e0a800;
+}
+
+.alert {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+    </style>
+
 <div class="container">
     <h1>Éditer le Paiement</h1>
 
@@ -69,7 +141,23 @@
         <button type="submit" class="btn btn-warning">Mettre à jour le Paiement</button>
     </form>
 </div>
-@endsection
+<!-- Bootstrap Bundle avec Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let form = document.querySelector("form");
+        form.addEventListener("submit", function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add("was-validated");
+        }, false);
+    });
+</script>
+
+</body>
+</html>
 {{-- @else
 <script>
     window.location.href = "{{ route('connexion.form') }}";

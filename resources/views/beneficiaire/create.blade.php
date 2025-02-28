@@ -1,6 +1,26 @@
-@extends('layouts.app')
+<html>
+    <head><!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+<body>
+<style>
+    .container {
+        max-width: 650px;
+        margin-top: 50px;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .btn {
+        min-width: 150px;
+    }
+    .btn-secondary {
+        margin-left: 10px;
+    }
+</style>
 
-@section('content')
+    
     <div class="container">
         <h2>Créer un Nouveau Bénéficiaire</h2>
 
@@ -35,7 +55,42 @@
             </div>
             
             <button type="submit" class="btn btn-primary">Créer</button>
-            <a href="{{ route('beneficiaire.index') }}" class="btn btn-secondary ml-2">Annuler</a>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary ml-2">Annuler</a>
         </form>
     </div>
-@endsection
+    <!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("beneficiaireForm");
+
+        form.addEventListener("submit", function (event) {
+            let valid = true;
+
+            const telephone = document.getElementById("telephone");
+            const email = document.getElementById("email");
+
+            // Vérification du numéro de téléphone (doit contenir uniquement des chiffres et être de 10 caractères)
+            const phoneRegex = /^[0-9]{10}$/;
+            if (!phoneRegex.test(telephone.value)) {
+                valid = false;
+                alert("Le numéro de téléphone doit contenir 10 chiffres !");
+            }
+
+            // Vérification de l'email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                valid = false;
+                alert("Veuillez entrer un email valide !");
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+    </body>
+    </html>

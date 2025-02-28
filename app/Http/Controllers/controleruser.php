@@ -87,7 +87,7 @@ public function destroy($id)
     if(Auth::user()->isAdmin()){
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', 'Utilisateur supprimé avec succès.');
     }
     
 }
@@ -113,7 +113,7 @@ public function store(Request $request)
     ]);
 
     // Rediriger avec un message de succès
-    return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
+    return redirect()->route('admin.dashboard')->with('success', 'Utilisateur créé avec succès.');
     }
 }
 public function update(Request $request, $id)
@@ -146,7 +146,7 @@ public function update(Request $request, $id)
     $user->save();
 
     // Rediriger avec un message de succès
-    return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès.');
+    return redirect()->route('admin.dashboard')->with('success', 'Utilisateur mis à jour avec succès.');
     }
 }
 
